@@ -1,5 +1,7 @@
 import React from 'react'
-import { authInstance, auth } from '../services/firebase'
+import { onAuthStateChanged, GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
+
+import { auth } from '../services/firebase'
 
 type Props = {
   children: React.ReactNode;
@@ -22,7 +24,7 @@ const AuthProvider: React.FC<Props> = ({ children }) => {
   const [user, setUser] = React.useState<User>()
 
   React.useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(authInstance, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         const { displayName, photoURL, uid } = user
 
@@ -44,9 +46,9 @@ const AuthProvider: React.FC<Props> = ({ children }) => {
   }, [])
 
   const signInWithGoogle = async () => {
-    const provider = new auth.GoogleAuthProvider()
+    const provider = new GoogleAuthProvider()
 
-    const result = await auth.signInWithPopup(authInstance, provider)
+    const result = await signInWithPopup(auth, provider)
       
     if (result.user) {
       const { displayName, photoURL, uid } = result.user

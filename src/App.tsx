@@ -1,8 +1,10 @@
 import React from 'react'
-import { BrowserRouter, Route } from 'react-router-dom'
+import { BrowserRouter, Route, Switch } from 'react-router-dom'
 
 import { Home } from './pages/Home'
 import { NewRoom } from './pages/NewRoom'
+import { Room } from './pages/Room'
+
 import { GlobalStyle } from './core/theme/globalStyle'
 import { AuthProvider } from './core/contexts/Auth'
 
@@ -12,8 +14,11 @@ function App () {
       <GlobalStyle />
       <BrowserRouter>
         <AuthProvider>
-          <Route path="/" exact component={Home} />
-          <Route path="/rooms/new" component={NewRoom} />
+          <Switch>
+            <Route path="/" exact component={Home} />
+            <Route path="/rooms/new" component={NewRoom} />
+            <Route path="/rooms/:id" component={Room} />
+          </Switch>
         </AuthProvider>
       </BrowserRouter>
     </>
