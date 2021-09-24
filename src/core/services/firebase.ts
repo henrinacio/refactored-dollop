@@ -11,9 +11,11 @@ import {
 
 import {
   getDatabase,
-  ref,
+  DataSnapshot,
+  ref as firebaseRef,
   get as firebaseGet,
-  push as firebasePush
+  push as firebasePush,
+  onValue as firebaseOnValue,
 } from 'firebase/database'
 
 const firebaseConfig = {
@@ -40,17 +42,25 @@ const signInWithPopup = () => {
   return firebaseSignInWithPopup(auth, provider)
 }
 
+const ref = (param: string) => {
+  return firebaseRef(db, param)
+}
+
+const onValue = (param: string, callback: (snapshot: DataSnapshot) => unknown) => {
+  return firebaseOnValue(ref(param), callback)
+}
 const get = (param: string) => {
-  return firebaseGet(ref(db, param))
+  return firebaseGet(ref(param))
 }
 
 const push = (param: string, value: unknown) => {
-  return firebasePush(ref(db, param), value)
+  return firebasePush(ref(param), value)
 }
 
 export {
   get,
   push,
+  onValue,
   onAuthStateChanged,
   signInWithPopup
 }

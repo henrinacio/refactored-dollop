@@ -81,3 +81,21 @@ export const FooterTextButton = styled.button`
   font-weight: 500;
   cursor: pointer;
 `
+
+export const UserInfoContainer = styled.div`
+  display: flex;
+  align-items: center;
+`
+
+export const UserInfoAvatar = styled.img`
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+`
+
+export const UserInfoName = styled.span`
+  margin-left: 8px;
+  color: #29292e;
+  font-weight: 500;
+  font-size: 14px;
+`
