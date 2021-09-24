@@ -1,8 +1,20 @@
 import { initializeApp } from 'firebase/app'
 
-import { getAuth } from 'firebase/auth'
+import {
+  getAuth,
+  GoogleAuthProvider,
+  onAuthStateChanged as firebaseOnAuthStateChanged,
+  signInWithPopup as firebaseSignInWithPopup,
+  NextOrObserver,
+  User
+} from 'firebase/auth'
 
-import { getDatabase } from 'firebase/database'
+import {
+  getDatabase,
+  ref,
+  get as firebaseGet,
+  push as firebasePush
+} from 'firebase/database'
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_API_KEY,
@@ -16,6 +28,29 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig)
 
-export const auth = getAuth(app)
+const auth = getAuth(app)
+const db = getDatabase(app)
+const provider = new GoogleAuthProvider()
 
-export const db = getDatabase(app)
+const onAuthStateChanged = (callback: NextOrObserver<User>) => {
+  return firebaseOnAuthStateChanged(auth, callback)
+}
+
+const signInWithPopup = () => {
+  return firebaseSignInWithPopup(auth, provider)
+}
+
+const get = (param: string) => {
+  return firebaseGet(ref(db, param))
+}
+
+const push = (param: string, value: unknown) => {
+  return firebasePush(ref(db, param), value)
+}
+
+export {
+  get,
+  push,
+  onAuthStateChanged,
+  signInWithPopup
+}

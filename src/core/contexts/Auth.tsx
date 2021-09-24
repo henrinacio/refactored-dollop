@@ -1,7 +1,6 @@
-import React from 'react'
-import { onAuthStateChanged, GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
+import { createContext, useEffect, useState, useContext }from 'react'
 
-import { auth } from '../services/firebase'
+import { onAuthStateChanged, signInWithPopup } from '../services/firebase'
 
 type Props = {
   children: React.ReactNode;
@@ -18,13 +17,13 @@ type AuthContextType = {
   signInWithGoogle: () => Promise<void>;
 }
 
-const AuthContext = React.createContext({} as AuthContextType)
+const AuthContext = createContext({} as AuthContextType)
 
 const AuthProvider: React.FC<Props> = ({ children }) => {
-  const [user, setUser] = React.useState<User>()
+  const [user, setUser] = useState<User>()
 
-  React.useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged((user) => {
       if (user) {
         const { displayName, photoURL, uid } = user
 
@@ -46,9 +45,7 @@ const AuthProvider: React.FC<Props> = ({ children }) => {
   }, [])
 
   const signInWithGoogle = async () => {
-    const provider = new GoogleAuthProvider()
-
-    const result = await signInWithPopup(auth, provider)
+    const result = await signInWithPopup()
       
     if (result.user) {
       const { displayName, photoURL, uid } = result.user
@@ -73,7 +70,7 @@ const AuthProvider: React.FC<Props> = ({ children }) => {
 }
 
 const useAuth = () => {
-  const context = React.useContext(AuthContext)
+  const context = useContext(AuthContext)
 
   if (!context) {
     throw new Error('useAuth must be used within an AuthProvider')

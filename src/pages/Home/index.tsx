@@ -1,9 +1,8 @@
-import React from 'react'
+import { useState } from 'react'
 import { useHistory } from 'react-router-dom'
-import { ref, get } from 'firebase/database'
 
 import { useAuth } from '../../core/contexts/Auth'
-import { db } from '../../core/services/firebase'
+import { get } from '../../core/services/firebase'
 
 import illustrationImg from '../../assets/images/illustration.svg'
 import logoImg from '../../assets/images/logo.svg'
@@ -29,7 +28,7 @@ import {
 export const Home = () => {
   const { user, signInWithGoogle } = useAuth()
   const history = useHistory()
-  const [roomCode, setRoomCode] = React.useState('')
+  const [roomCode, setRoomCode] = useState('')
 
   const handleCreateRoom = async () => {   
     if (!user) {
@@ -46,9 +45,7 @@ export const Home = () => {
       return
     }
 
-    const roomRef = ref(db, `rooms/${roomCode}`)
-
-    const firebaseRoom = await get(roomRef)
+    const firebaseRoom = await get(`rooms/${roomCode}`)
 
     if (!firebaseRoom.exists()) {
       alert('Room does not exist')

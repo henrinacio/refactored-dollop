@@ -1,9 +1,8 @@
-import React from 'react'
+import { useState, FormEvent } from 'react'
 import { useHistory } from 'react-router'
-import { push, ref } from 'firebase/database'
 
 import { useAuth } from '../../core/contexts/Auth'
-import { db } from '../../core/services/firebase'
+import { push } from '../../core/services/firebase'
 
 import illustrationImg from '../../assets/images/illustration.svg'
 import logoImg from '../../assets/images/logo.svg'
@@ -28,23 +27,21 @@ import {
 export const NewRoom = () => {
   const { user } = useAuth()
   const history = useHistory()
-  const [newRoom, setNewRoom] = React.useState('')
+  const [newRoom, setNewRoom] = useState('')
 
-  const handleCreateRoom = async (e: React.FormEvent) => {
+  const handleCreateRoom = async (e: FormEvent) => {
     e.preventDefault()
     
     if (newRoom.trim() === '') {
       return
     }
 
-    const roomRef = ref(db, 'rooms')
-
     const createRoomData = {
       title: newRoom,
       authorId: user?.id,
     }
 
-    const firebaseRoom = await push(roomRef, createRoomData)
+    const firebaseRoom = await push('rooms', createRoomData)
 
     history.push(`/rooms/${firebaseRoom.key}`)
   }
