@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState, useContext }from 'react'
+import { createContext, useEffect, useState }from 'react'
 
 import { onAuthStateChanged, signInWithPopup } from '../services/firebase'
 
@@ -69,14 +69,6 @@ const AuthProvider: React.FC<Props> = ({ children }) => {
   )
 }
 
-const useAuth = () => {
-  const context = useContext(AuthContext)
 
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider')
-  }
 
-  return context
-}
-
-export { AuthContext, AuthProvider, useAuth }
+export { AuthContext, AuthProvider }

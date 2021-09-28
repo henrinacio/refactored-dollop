@@ -1,8 +1,5 @@
-import styled, { css } from 'styled-components'
-
-type LikedButtonProps = {
-  $liked?: boolean;
-}
+import styled from 'styled-components'
+import { Button } from '../../components/Button'
 
 export const Container = styled.div``
 
@@ -11,7 +8,7 @@ export const HeaderContainer = styled.header`
   border-bottom: 1px solid #e2e2e2;
 `
 
-export const HeaderContent = styled.div`
+export const Header = styled.div`
   max-width: 1120px;
   margin: 0 auto;
   display: flex;
@@ -19,8 +16,17 @@ export const HeaderContent = styled.div`
   align-items: center;
 `
 
-export const HeaderLogo = styled.img`
+export const Logo = styled.img`
   max-height: 45px;
+`
+
+export const RoomDetails = styled.div`
+  display: flex;
+  gap: 16px;
+`
+
+export const CloseRoomButton = styled(Button)`
+  height: 40px;
 `
 
 export const RoomContainer = styled.main`
@@ -50,42 +56,6 @@ export const RoomQuestions = styled.span`
   font-size: 14px;
 `
 
-export const FormContainer = styled.form``
-
-export const FormTextArea = styled.textarea`
-  width: 100%;
-  border: 0;
-  padding: 16px;
-  border-radius: 8px;
-  background: #fefefe;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
-  resize: vertical;
-  min-height: 130px;
-`
-
-export const FormFooter = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 16px;
-`
-
-export const FormFooterText = styled.span`
-  font-size: 14px;
-  color: #737380;
-  font-weight: 500;
-`
-
-export const FooterTextButton = styled.button`
-  background: transparent;
-  border: 0;
-  color: #8354FD;
-  text-decoration: underline;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-`
-
 export const UserInfoContainer = styled.div`
   display: flex;
   align-items: center;
@@ -108,7 +78,7 @@ export const QuestionList = styled.div`
   margin-top: 32px;
 `
 
-export const LikeButton = styled.button`
+export const DeleteButton = styled.button`
   border: 0;
   background: transparent;
   cursor: pointer;
@@ -121,18 +91,6 @@ export const LikeButton = styled.button`
   &:hover {
     filter: brightness(0.7);
   }
-
-  ${({ $liked }: LikedButtonProps) => $liked && css`
-    color: #935afd;
-  `}
 `
 
-export const LikeIcon = styled.img`
-  ${({ $liked }: LikedButtonProps) => $liked && css`
-    path {
-      stroke: #835afd;
-    }
-  `}  
-`
-
-export const LikeCount = styled.span``
+export const DeleteIcon = styled.img``

@@ -1,8 +1,9 @@
-import { FormEvent, useEffect, useState } from 'react'
+import { FormEvent, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
-import { useAuth } from '../../core/contexts/Auth'
-import { push, onValue } from '../../core/services/firebase'
+import { useAuth } from '../../core/hooks/useAuth'
+import { push, remove } from '../../core/services/firebase'
+import { useRoom } from '../../core/hooks/useRoom'
 
 import { Button } from '../../components/Button'
 import { RoomCode } from '../../components/RoomCode'
@@ -23,63 +24,26 @@ import {
   FooterTextButton,
   UserInfoContainer,
   UserInfoAvatar,
-  UserInfoName
+  UserInfoName,
+  QuestionList,
+  LikeButton,
+  LikeIcon,
+  LikeCount,
 } from './styles'
 
 import logoImg from '../../assets/images/logo.svg'
+import likeImg from '../../assets/images/like.svg'
+import { Question } from '../../components/Question'
 
 type RoomParams = {
   id: string;
 }
 
-type FirebaseQuestions = Record<string, {
-  author: {
-    name: string;
-    avatar: string;
-  }
-  content: string;
-  isHighlighted: boolean;
-  isAnswered: boolean;
-}>
-
-type Question = {
-  id: string;
-  author: {
-    name: string;
-    avatar: string;
-  }
-  content: string;
-  isHighlighted: boolean;
-  isAnswered: boolean;
-}
-
 export const Room = () => {
   const { user } = useAuth()
   const { id: roomId } = useParams<RoomParams>()
+  const { questions, title } = useRoom(roomId)
   const [newQuestion, setNewQuestion] = useState('')
-  const [questions, setQuestions] = useState<Question[]>([])
-  const [title, setTitle] = useState('')
-
-  useEffect(() => {
-    onValue(`rooms/${roomId}`, (room) => {
-      const databaseRoom = room.val()
-      const firebaseQuestions: FirebaseQuestions = databaseRoom.questions ?? {}
-
-      const parsedQuestions = Object.entries(firebaseQuestions)
-        .map(([key, value]) => {
-          return {
-            id: key,
-            content: value.content,
-            author: value.author,
-            isHighlighted: value.isHighlighted,
-            isAnswered: value.isAnswered
-          }
-        })
-
-      setTitle(databaseRoom.title)
-      setQuestions(parsedQuestions)
-    })
-  }, [roomId])
 
   const handleSendQuestion = async (e: FormEvent) => {
     e.preventDefault()
@@ -107,6 +71,16 @@ export const Room = () => {
     setNewQuestion('')
   }
 
+  const handleLikeQuestion = async (questionId: string, likeId: string | undefined) => {
+    if (likeId) {
+      await remove(`rooms/${roomId}/questions/${questionId}/likes/${likeId}`)
+    } else {
+      await push(`rooms/${roomId}/questions/${questionId}/likes`, {
+        authorId: user?.id
+      })
+    }    
+  }
+
   return (
     <Container>
       <HeaderContainer>
@@ -117,18 +91,12 @@ export const Room = () => {
       </HeaderContainer>
       <RoomContainer>
         <RoomTitleContainer>
-          <RoomTitle>
-            Sala {title}
-          </RoomTitle>
-          {questions.length > 0 &&
-            <RoomQuestions>
-              {questions.length} pergunta(s)
-            </RoomQuestions>
-          }
+          <RoomTitle>Sala {title}</RoomTitle>
+          {questions.length > 0 && <RoomQuestions>{questions.length} pergunta(s)</RoomQuestions>}
         </RoomTitleContainer>
         <FormContainer onSubmit={handleSendQuestion}>
           <FormTextArea
-            placeholder="O que vocẽ quer perguntar?"
+            placeholder="O que você quer perguntar?"
             onChange={(e) => setNewQuestion(e.target.value)}
             value={newQuestion}
           />
@@ -137,9 +105,7 @@ export const Room = () => {
               ? (
                 <UserInfoContainer>
                   <UserInfoAvatar src={user.avatar} alt={user.name} />
-                  <UserInfoName>
-                    {user.name}
-                  </UserInfoName>
+                  <UserInfoName>{user.name}</UserInfoName>
                 </UserInfoContainer>
               )
               : (
@@ -153,6 +119,20 @@ export const Room = () => {
             </Button>
           </FormFooter>
         </FormContainer>
+        <QuestionList>
+          {questions.map((question) => (
+            <Question key={question.id} content={question.content} author={question.author}>
+              <LikeButton
+                type='button'
+                $liked={Boolean(question.likeId)}
+                onClick={() => handleLikeQuestion(question.id, question.likeId)}
+              >
+                {question.likeCount > 0 && <LikeCount>{question.likeCount}</LikeCount>}
+                <LikeIcon src={likeImg} $liked={Boolean(question.likeId)} />
+              </LikeButton>
+            </Question>
+          ))}
+        </QuestionList>        
       </RoomContainer>
     </Container>
   )

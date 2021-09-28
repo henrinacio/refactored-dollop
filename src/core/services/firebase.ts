@@ -12,6 +12,9 @@ import {
 import {
   getDatabase,
   DataSnapshot,
+  update as firebaseUpdate,
+  remove as firebaseRemove,
+  off as firebaseOff,
   ref as firebaseRef,
   get as firebaseGet,
   push as firebasePush,
@@ -49,6 +52,7 @@ const ref = (param: string) => {
 const onValue = (param: string, callback: (snapshot: DataSnapshot) => unknown) => {
   return firebaseOnValue(ref(param), callback)
 }
+
 const get = (param: string) => {
   return firebaseGet(ref(param))
 }
@@ -57,7 +61,23 @@ const push = (param: string, value: unknown) => {
   return firebasePush(ref(param), value)
 }
 
+const off = (param: string) => {
+  return firebaseOff(ref(param))
+}
+
+const remove = (param: string) => {
+  return firebaseRemove(ref(param))
+}
+
+const update = (param: string, values: object) => {
+  return firebaseUpdate(ref(param), values)
+}
+
 export {
+  off,
+  update,
+  remove,
+  ref,
   get,
   push,
   onValue,

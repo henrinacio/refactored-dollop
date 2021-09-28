@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 
-import { useAuth } from '../../core/contexts/Auth'
+import { useAuth } from '../../core/hooks/useAuth'
 import { get } from '../../core/services/firebase'
 
 import illustrationImg from '../../assets/images/illustration.svg'
@@ -51,6 +51,12 @@ export const Home = () => {
       alert('Room does not exist')
       return
     }
+
+    if (firebaseRoom.val().endedAt) {
+      alert('Room already closed.')
+      return
+    }
+
 
     history.push(`/rooms/${roomCode}`)
   }

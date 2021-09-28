@@ -1,7 +1,7 @@
 import { useState, FormEvent } from 'react'
 import { useHistory } from 'react-router'
 
-import { useAuth } from '../../core/contexts/Auth'
+import { useAuth } from '../../core/hooks/useAuth'
 import { push } from '../../core/services/firebase'
 
 import illustrationImg from '../../assets/images/illustration.svg'
