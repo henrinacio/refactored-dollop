@@ -1,5 +1,5 @@
 import { ReactNode } from "react"
-import styled from "styled-components"
+import styled, { css } from "styled-components"
 
 type QuestionProps = {
   content: string;
@@ -8,6 +8,13 @@ type QuestionProps = {
     avatar: string;
   };
   children?: ReactNode;
+  isAnswered?: boolean;
+  isHighlighted?: boolean;
+}
+
+type ContainerProps = {
+  $highlighted?: boolean;
+  $answered?: boolean;
 }
 
 const Container = styled.div`
@@ -19,6 +26,15 @@ const Container = styled.div`
   & + & {
     margin-top: 8px;
   }
+
+  ${({ $highlighted }: ContainerProps) => $highlighted && css`
+    background: #F4F0FF;
+    border: 1px solid #835AFD;
+  `}
+
+  ${({ $answered }: ContainerProps) => $answered && css`
+    background: #DBDCDD;
+  `}
 `
 
 const QuestionDescription = styled.p`
@@ -47,24 +63,33 @@ const Author = styled.span`
   margin-left: 8px;
   color: #737388;
   font-size: 14px;
+
+  ${({ $highlighted }: ContainerProps) => $highlighted && css`
+    color: #29292E;
+  `}
 `
 
-export const Question = ({ content, author, children }: QuestionProps) => {
+const IconsContainer = styled.div`
+  display: flex;
+  gap: 16px;
+`
+
+export const Question = ({ 
+  content, 
+  author, 
+  children, 
+  isAnswered = false, 
+  isHighlighted = false,
+}: QuestionProps) => {
   return (
-    <Container>
-      <QuestionDescription>
-        {content}
-      </QuestionDescription>
+    <Container $highlighted={isHighlighted} $answered={isAnswered}>
+      <QuestionDescription>{content}</QuestionDescription>
       <Footer>
         <UserInfo>
           <Avatar src={author.avatar} alt={author.name} />
-          <Author>
-            {author.name}
-          </Author>
+          <Author $highlighted={isHighlighted}>{author.name}</Author>
         </UserInfo>
-        <div>
-          {children}
-        </div>
+        <IconsContainer>{children}</IconsContainer>
       </Footer>
     </Container>
   )

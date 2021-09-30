@@ -78,14 +78,11 @@ export const QuestionList = styled.div`
   margin-top: 32px;
 `
 
-export const DeleteButton = styled.button`
+export const ActionButton = styled.button`
   border: 0;
   background: transparent;
   cursor: pointer;
-  display: flex;
-  align-items: flex-end;
   color: #737380;
-  gap: 8px;
   transition: filter(0.2);
 
   &:hover {
@@ -93,4 +90,4 @@ export const DeleteButton = styled.button`
   }
 `
 
-export const DeleteIcon = styled.img``
+export const ActionIcon = styled.img``

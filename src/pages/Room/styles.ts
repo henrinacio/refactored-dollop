@@ -1,4 +1,5 @@
 import styled, { css } from 'styled-components'
+import { ReactComponent as LikeImg }from '../../assets/images/like.svg'
 
 type LikedButtonProps = {
   $liked?: boolean;
@@ -127,7 +128,7 @@ export const LikeButton = styled.button`
   `}
 `
 
-export const LikeIcon = styled.img`
+export const LikeIcon = styled(LikeImg)`
   ${({ $liked }: LikedButtonProps) => $liked && css`
     path {
       stroke: #835afd;

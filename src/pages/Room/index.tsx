@@ -32,7 +32,6 @@ import {
 } from './styles'
 
 import logoImg from '../../assets/images/logo.svg'
-import likeImg from '../../assets/images/like.svg'
 import { Question } from '../../components/Question'
 
 type RoomParams = {
@@ -78,7 +77,7 @@ export const Room = () => {
       await push(`rooms/${roomId}/questions/${questionId}/likes`, {
         authorId: user?.id
       })
-    }    
+    }
   }
 
   return (
@@ -121,18 +120,26 @@ export const Room = () => {
         </FormContainer>
         <QuestionList>
           {questions.map((question) => (
-            <Question key={question.id} content={question.content} author={question.author}>
-              <LikeButton
-                type='button'
-                $liked={Boolean(question.likeId)}
-                onClick={() => handleLikeQuestion(question.id, question.likeId)}
-              >
-                {question.likeCount > 0 && <LikeCount>{question.likeCount}</LikeCount>}
-                <LikeIcon src={likeImg} $liked={Boolean(question.likeId)} />
-              </LikeButton>
+            <Question
+              key={question.id}
+              content={question.content}
+              author={question.author}
+              isAnswered={question.isAnswered}
+              isHighlighted={question.isHighlighted && !question.isAnswered}
+            >
+              {!question.isAnswered && (
+                <LikeButton
+                  type='button'
+                  $liked={Boolean(question.likeId)}
+                  onClick={() => handleLikeQuestion(question.id, question.likeId)}
+                >
+                  {question.likeCount > 0 && <LikeCount>{question.likeCount}</LikeCount>}
+                  <LikeIcon $liked={Boolean(question.likeId)} />
+                </LikeButton>
+              )}
             </Question>
           ))}
-        </QuestionList>        
+        </QuestionList>
       </RoomContainer>
     </Container>
   )
